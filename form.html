@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <script defer src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <title>Apply Form</title>
+    </head>
+    <style>
+        /* Additional styles for the form */
+        .form-container {
+            border: 1px solid #ddd;
+            padding: 20px;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-container h3 {
+            margin-bottom: 20px;
+        }
+
+        .form-container label {
+            font-weight: bold;
+        }
+
+        .form-container textarea {
+            resize: none;
+        }
+
+        .form-container button {
+            width: 100%;
+        }
+
+        @media  screen and (max-width:576px) {
+            .table-cont{
+                width: 50% !important;
+            }
+        }
+    </style>
+<body>
+    <div class="container">
+        <div class="row">
+            <!-- form column -->
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6">
+                <div class="form-container mt-4">
+                    <form id="signupForm" class="row g-3 ">
+                        <h3>Sign Up!</h3>
+                        <div class="col-md-6">
+                            <label for="inputfName" class="form-label">First Name</label>
+                            <input type="text" class="form-control" id="inputfName" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputlName" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" id="inputlName" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputEmail4" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="inputEmail4" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputContact" class="form-label">Contact No:</label>
+                            <input type="text" class="form-control" id="inputContact" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="inputPassword4" class="form-label">Password</label>
+                            <input type="password" class="form-control" id="inputPassword4" required>
+                        </div>
+    
+    
+                        <div class="col-md-6">
+                            <label for="inputCity" class="form-label">City</label>
+                            <input type="text" class="form-control" id="inputCity" required>
+                        </div>
+    
+    
+                        <label for="messageBox">Message Box:</label>
+                        <textarea class="form-control" id="messageBox" rows="4" placeholder="Enter your message"></textarea>
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary mt-3 float-end">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!-- table column -->
+            <div class="col-12 col-sm-12 col-md-6 col-lg-6 mt-5 table-cont">
+                <h3>Retrieved Info in Tabular form</h3>
+                <table class="table table-sm table-striped" id="dataTable">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Contact</th>
+                        <th>Password</th>
+                        <th>City</th>
+                        <th>Message</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+    
+                    </tbody>
+                </table>
+    
+            </div>
+        </div>
+    </div>
+</body>
+<script>
+    let Users = [];
+
+    window.onload = function () {
+        // localStorage.clear();
+
+        if (localStorage) {
+            Users = JSON.parse(localStorage.getItem('Users')) || [];
+
+            document.getElementById('signupForm').addEventListener('submit', function (event) {
+                event.preventDefault(); 
+
+                var fName = document.getElementById('inputfName').value;
+                var lName = document.getElementById('inputlName').value;
+                var email = document.getElementById('inputEmail4').value;
+                var contactNo = document.getElementById('inputContact').value;
+                var password = document.getElementById('inputPassword4').value;
+                var city = document.getElementById('inputCity').value;
+                var message = document.getElementById('messageBox').value;
+
+                const newUser = {
+                    fName: fName,
+                    lName: lName,
+                    email: email,
+                    contactNo: contactNo,
+                    password: password,
+                    city: city,
+                    message: message
+                };
+
+                Users.push(newUser);
+
+                // Update the Users array in local storage
+                localStorage.setItem('Users', JSON.stringify(Users));
+
+                // Clear the form fields after submitting
+                document.getElementById('signupForm').reset();
+
+                alert('Registration successful!');
+                console.log("console running", Users);
+
+                updateTable();
+            });
+        } else {
+            console.log('No support for local storage');
+        }
+
+        
+
+        function updateTable() {
+            let tableBody = document.getElementById('dataTable').getElementsByTagName('tbody')[0];
+            tableBody.innerHTML = ''; 
+
+            for (let i = 0; i < Users.length; i++) {
+                let user = Users[i];
+                let row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${user.fName} ${user.lName}</td>
+                    <td>${user.email}</td>
+                    <td>${user.contactNo}</td>
+                    <td>${user.password}</td>
+                    <td>${user.city}</td>
+                    <td>${user.message}</td>
+                `;
+
+                tableBody.appendChild(row);
+            }
+        }
+        updateTable();
+    };
+</script>
+</html>
